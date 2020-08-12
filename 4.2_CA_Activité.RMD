@@ -1,0 +1,182 @@
+---
+title: "Analyse statistique des Clusters"
+author: "LUQUEZI Leonardo"
+date: "11/08/2020, 2020"
+output:
+  pdf_document: 
+    fig_caption: yes
+    highlight: haddock
+    keep_tex: no
+    number_sections: yes
+  html_document: default
+link-citations: no
+bibliography: references.bib
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(TraMineR)
+library(TraMineRextras)
+library(WeightedCluster)
+```
+
+
+```{r setup, include=FALSE}
+## ---------- 1.Path management ----------
+# Path: lire les données brutes .RDR de l'Enquête
+# PathR.Menage <- "DataR/BD_brute_menage.RDS"
+PathR.Personne <- "DataR/BD_brute_personne.RDS"
+PathR.Deplacement <- "DataR/BD_brute_depl.RDS"
+# PathR.Trajet <- "DataR/BD_brute_trajet.RDS"
+
+# Path: lire les données ADN Mobilité .RDR
+
+```
+
+# Introductio
+Cette étude a pour but la description statistique des clusters crées dans la partie précédante. 
+
+```{r, include=F}
+#Charchement des clustersc et des donnees
+load("DataR/Analyse/ADN_M.RDS")
+load("DataR/Analyse/adn.seq.RDS")
+# load("DataR/Analyse/adn.tree.RDS")
+# load("DataR/Analyse/clusterRange.RDS")
+# load("DataR/Analyse/clusterward1.RDS")
+# load("DataR/Analyse/da.cov.RDS")
+# load("DataR/Analyse/da.sex.RDS")
+load("DataR/Analyse/dist.om.RDS")
+# load("DataR/Analyse/stat1.RDS")
+# load("DataR/Analyse/stat2.RDS")
+# load("DataR/Analyse/submat.RDS")
+# load("DataR/Analyse/h.cluster11.RDS")
+# load("DataR/Analyse/alphabetTable.RDS")
+
+load(PathR.Deplacement)
+load(PathR.Personne)
+```
+
+On reprend les fonctions utilisées dans l'analyses générale des séquences pour les appliquer séparément dans chaque cluster. Puis, on utilise la silhouette (ASW) de chaque trajectoire pour trier les séquences, celles qui corespondent le plus à la classification sont affichées en premier:
+
+```{r eval=T, echo=F, error=FALSE, fig.height=15, fig.width=10, message=FALSE, warning=FALSE}
+#Compute and plot the state distributions by time points. 
+seqdplot(adn.seq, group = ADN_M$groupe, border = NA, with.legend = T)
+
+# Calcul de la silhouette pour chaque trajectoire 
+sil <- wcSilhouetteObs(dist.om, ADN_M$groupe, weights = NULL, measure="ASW")
+
+# On utilise les silhouettes (ASW, ou la variante "ASWw") pour ordonner les séquences dans des index-plots.
+seqIplot(adn.seq, with.legend = T , group = ADN_M$groupe, sortv=sil)
+
+#Plot the mean time spent in each state of the alphabet
+seqmtplot(adn.seq, with.legend = T, group = ADN_M$groupe)
+
+# Compute and plot the transversal entropy index (sequence of entropies of the transversal state distributions)
+seqHtplot(adn.seq, group = ADN_M$groupe )
+
+```
+
+Pour chaque cluster, en se basant sur une covariable de référence, on étudie la distribution du pourcentage des caractéristique par rapport au nombre d'observation du cluster, le pourcentage des caractéristiques par rapport au total et, finalement, le nombre brut de cas.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, collapse=F}
+
+for (covariable in names(ADN_M)[11]) {
+  print(paste("Analyse:", covariable))
+  
+  DesC <- ADN_M %>%
+  group_by(groupe, ADN_M[[covariable]] , .drop = FALSE) %>%
+  summarise(nb = n())%>%
+  # ungroup() %>%
+  mutate(pourcentage.g = nb / sum(nb) * 100) %>% 
+  ungroup() %>%
+  mutate(pourcentage.t = nb / sum(nb) * 100)  
+    
+    
+# Pourcentage par rapport au groupe
+#   DesC <- DesC %>%
+  print("Pourcentage par rapport au groupe")
+Des  <- DesC %>%
+  select(groupe, pourcentage.g, `ADN_M[[covariable]]`) %>%
+  spread(key = groupe , value = pourcentage.g, fill = 0) %>%
+  rename( Variable = `ADN_M[[covariable]]`)
+
+  print.data.frame(Des)
+
+# Pourcentage par rapport au total
+  print("Pourcentage par rapport au total")
+Des <- DesC %>%
+  select(groupe, pourcentage.t, `ADN_M[[covariable]]`) %>%
+  spread(key = groupe , value = pourcentage.t, fill = 0) %>%
+  rename( Variable = `ADN_M[[covariable]]`)
+  print.data.frame(Des)
+
+# Nombre de cas
+  print("Nombre de cas")
+Des <- DesC %>%
+  select(groupe, nb, `ADN_M[[covariable]]`) %>%
+  spread(key = groupe , value = nb, fill = 0) %>%
+  rename( Variable = `ADN_M[[covariable]]`)
+  print.data.frame(Des)
+  
+  print("-----------------------------------------------------------------------------------------")
+# # # print.data.frame(DesC)
+  
+}
+
+rm(covariable, DesC, Des)
+
+```
+
+Enfin, fe nombre moyen de deplacements par jour par personne par groupe (nd/per) et budget distance moyen (km/per) par groupe sont également calculés. Il se fait donc nécessaire utiliser la base de données déplacement brute pour ces calculs. Les résultats se trouvent dans le tableau suivant:
+
+```{r message=FALSE, warning=FALSE, echo = F}
+load(PathR.Deplacement)
+
+
+tripTable <- BD_depl_EMD
+rm(BD_depl_EMD)
+
+# Creation d'un identifiant unique pour chaque individu; 
+# Concatenation de Secteur de Tirage(DTIR), Zone fine de residance(DP2), Nº Echantillon(ECH) et Nº Personne (PER)
+tripTable <- tripTable %>% 
+  unite(ID_IND, c("DTIR","DP2","ECH","PER")) %>% 
+  mutate(DIST = as.integer(DIST))
+
+
+tripTable <- tripTable %>% 
+             left_join(y = ADN_M, by = "ID_IND", keep = F ) 
+
+tripTable <- tripTable %>% 
+             filter(is.na(groupe) == FALSE)
+
+# Nombre moyen de deplacements par jour par personne 
+print("Nombre moyen de deplacements par jour par personne par groupe (nd/per)")
+DesC <- tripTable %>%
+  group_by(groupe, ID_IND, .drop = FALSE) %>%
+  summarise(nd = n()) %>% 
+  group_by(groupe) %>% 
+  summarise( nm = sum(nd)/n())
+
+print.data.frame(DesC)
+
+# Budget distance moyen (km/per)
+
+print("Budget distance moyen (km/per) par groupe")
+DesC <- tripTable %>%
+  group_by(groupe, ID_IND, .drop = FALSE) %>%
+  summarise(dm = sum(DIST)/(1000)) %>%
+  group_by(groupe) %>%
+  summarise(bdm = sum(dm)/n())
+
+print.data.frame(DesC)
+# %>%
+#   mutate(total.g = sum(nb)) %>% 
+  
+  # ungroup() %>%
+  # mutate(pourcentage.t = nb / sum(nb) * 100)
+
+```
+
