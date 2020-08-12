@@ -1,0 +1,57 @@
+Label;ShortLabel;Classe;Alphabet;Codification
+Domicile;DO;MOTIF;D;01_02
+Travail lieu habituel;TH;MOTIF;T;11
+Travail autre lieu;TN;MOTIF;W;12_13_81
+Etudes;ET;MOTIF;E;21_22_23_24_25_26_27_28_29
+Achats;AC;MOTIF;H;30_31_32_33_34_35
+Services;SR;MOTIF;S;41_43_44_45
+Restaurer;RH;MOTIF;M;53
+Loisirs;LO;MOTIF;L;51_52_54_82
+Accompagnement;AC;MOTIF;C;61_62_63_64_71_72_73_74
+Autres Activites;AA;MOTIF;O;91
+Deplacement;DE;MODE;d;01_11_12_19_13_14_15_16_21_22_61_81_82_32_34_35_36_37_91_92_93_94_95_38_39_41_42_52_53_71_72_73_30
+Active;Active;OCC;1;1_2
+Etudiant;Etudiant;OCC;2;3_4_5
+Sans Emploi;SE;OCC;3;6
+Retraites;Retraites;OCC;4;7
+Inactifs;Inactifs;OCC;5;8
+Autres Occupations;AutresOcc;OCC;0;9
+Faible;Faible;EDUC;1;1_7_9
+Intermediaire;Intermediaire;EDUC;2;2_3
+Eleve;Eleve;EDUC;3;4_5_8
+Tres Eleve;TresEleve;EDUC;4;6
+Autres Neduc;AutresNeduc;EDUC;0;0_
+Inactifs;Inactifs;PCSC;1;8_9
+Ouvriers;Ouvriers;PCSC;2;6
+Employe;Employe;PCSC;3;5
+Intermediaire;Intermediaire;PCSC;4;1_2_4
+Cadres;Cadres;PCSC;5;3
+Autres SocioPro;AutresSocioPro;PCSC;0;0_7
+Permis Oui;Permis Oui;PERMIS;1;N
+Permis Non;Permis Non;PERMIS;2;N
+Permis Acc ou Leçons;Permis AL;PERMIS;3;N
+Disp voiture Oui;Disv Oui;DISV;1;1_2_3
+Disp voiture Non;Disv Non;DISV;2;4_
+"Age[0;16[";"A[0;16[";KAGE;0;N
+"Age[16;24]";"A[16;24]";KAGE;1;N
+"Age[25;34]";"A[25;34]";KAGE;2;N
+"Age[35;64]";"A[35;64]";KAGE;3;N
+Age65+;A65+;KAGE;4;N
+"DsitDT[0;1[";"DT[0;1[";DDT;1;N
+"DsitDT[1;5[";"DT[1;5[";DDT;2;N
+"DsitDT[5;10[";"DT[5;10[";DDT;3;N
+"DsitDT[10;50[";"DT[10;50[";DDT;4;N
+DsitDT[50+;DT[50+;DDT;5;N
+DistDP[0];DP[0];DISTP;0;N
+"DistDP[0;1[";"DP[0;1[";DISTP;1;N
+"DistDP[1;3[";"DP[1;3[";DISTP;2;N
+"DistDP[3;10[";"DP[3;10[";DISTP;3;N
+DistDP[10+;DP[10+;DISTP;4;N
+Masculin;M;SEX;1;N
+Feminin;F;SEX;2;N
+CentreVille;CV;ST;1;001_002_004_005_006
+NordEst;NE;ST;2;012_018_019_020_031_036_037_038_039_040
+Nord;N;ST;3;011_017_028_029_030
+NorOuest;NO;ST;4;003_008_009_010_013_014_015_016_025_026_027_033_034_035_052_053
+SudEst;SE;ST;5;007_021_022_023_041_042_043_044
+SudOuest;SO;ST;6;024_032_045_046_047_048_049_050_051

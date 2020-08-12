@@ -1,0 +1,22 @@
+Labels;Classe;Alphabet;Codification
+Domicile;Motif;D;01_02
+Travail (lieu habituel);Motif;T;11
+Travail non habituel (sur un autre lieu);Motif;W;12_13
+Tournée professionnelle;Motif;R;81
+Etudes;Motif;E;21_22_23_24_25_26_27_28_29
+Achats;Motif;H;30_31_32_33_34_35
+Services;Motif;S;41_42_43_44
+Restaurer hors domicile;Motif;M;53
+Loisirs;Motif;L;51_52_54_82
+Accompagnement;Motif;C;61_62_63_64_71_72_73_74
+Autre;Motif;O;91
+JSP;Motif;J;45
+marche;Mode;m;01
+velo;Mode;b;11_12_19
+deux roues-motorises;Mode;d;13_14_15_16
+voiture (conducteur);Mode;v;21
+voiture (passager);Mode;p;22_61
+utilitaire ou poids lourds;Mode;u;81_82
+transport commun;Mode;t;32_34_35_36_37
+autres modes;Mode;o;91_92_93_94_95
+jsp;Mode;j;38_39_41_42_52_53_71_72_73
