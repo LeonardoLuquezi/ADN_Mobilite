@@ -27,7 +27,7 @@ Avant d'introduire le code, il est nécessaire de remarquer que l'étude reste i
 
 - `4.2_CA_Activité.RMD` extension pour l'analyse quantitative des groupes/typologies creés
 
-Le diagramme ci-dessous indique la dépendance entre les étapes de l'analyse
+Le diagramme ci-dessous indique la dépendance entre les différentes étapes de l'analyse
 
 ![Diagramme de dépendance des étapes](Figures/Diagramme.PNG "Diagramme de dépendance des étapes")
 
