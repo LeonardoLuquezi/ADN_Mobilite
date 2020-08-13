@@ -47,3 +47,4 @@ Le diagramme ci-dessous indique la dépendance entre les différentes étapes de
 - Mettre en lien trajectoires-types et facteurs explicatifs
 
 ## FAQ
+Comment modifier l'alphabet ?
