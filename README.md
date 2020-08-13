@@ -1,5 +1,5 @@
 # Analyse de l'Equête Ménage Déplacement Loire-Atlantique
-Cet étude analyse les données open-source issues des Enqêtes Déplacement Grand Territoire (EDGT) en particulier de [l'EDGT44](https://www.data.gouv.fr/fr/datasets/enquete-deplacements-en-loire-atlantique-2/) de 2015 qui a eu lieu en Loire-Atlantique.
+Cette étude analyse les données open-source issues des Enqêtes Déplacement Grand Territoire (EDGT) en particulier de [l'EDGT44](https://www.data.gouv.fr/fr/datasets/enquete-deplacements-en-loire-atlantique-2/) de 2015 qui a eu lieu en Loire-Atlantique.
 D'un côté on a une liste de caractéristiques des personnes enquêtées (e.g. âge, niveau d'étude, etc.) et de l'autre côté leur profil de déplacement dans une journée de semaine.
 En se basant sur des nouvelles techniques d'analyse de séquences (bibliothèque [TraMineR](http://traminer.unige.ch/index.shtml)), l'objectif est non seulement de trouver des profils types de déplacement, mais aussi d'identifier les caractéristiques les plus remarquables dans la différentiation des déplacements quotidiens.
 Les scripts sont fortement inspirés du projet [Mobiliscope](https://github.com/Geographie-cites/mobiliscope) et du projet [ADN Mobilité](https://hal.archives-ouvertes.fr/hal-01739602/file/ADN%20mobility%20-%20Swiss%20mobility%20conference%202016%20-%20Palmier_Hasiak_20161013.pdf).
