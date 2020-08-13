@@ -8,7 +8,7 @@ L'arbre de régression présentée ci-dessous illustre une des analyses possible
 
 ![Arbre de regression](Figures/gg_adn.png "Arbre de regression")
 
-Avant d'introduire le code, il se fait nécessaire remarquer que l'étude reste incomplet sans les apports sociologiques, c'est-a-dire que les classements et les analyses sont des spéculations qui ne représentent pas forcement la réalite.
+Avant d'introduire le code, il est nécessaire de remarquer que l'étude reste incomplet sans les apports sociologiques, c'est-a-dire que les classements et les analyses sont des spéculations qui ne représentent pas forcement la réalite.
 
 ## Scripts
 - `0_functionsR` boite à outils pour le traitement des données EGDT et l'analyse de séquences (ADN Mobilité)
