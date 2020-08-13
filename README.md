@@ -1,5 +1,5 @@
 # Analyse de l'Equête Ménage Déplacement Loire-Atlantique
-Cet étude analyse les données open-source issues des Enqêtes Déplacement Grand Territoire (EDGT) en particulier de l'EDGT44 de 2015 qui a eu lieu en Loire-Atlantique.
+Cet étude analyse les données open-source issues des Enqêtes Déplacement Grand Territoire (EDGT) en particulier de [l'EDGT44](https://www.data.gouv.fr/fr/datasets/enquete-deplacements-en-loire-atlantique-2/) de 2015 qui a eu lieu en Loire-Atlantique.
 D'un côté on a une liste de caractéristiques des personnes enquêtées (e.g. âge, niveau d'étude, etc.) et de l'autre côté leur profil de déplacement dans une journée de semaine.
 En se basant sur des nouvelles techniques d'analyse de séquences (bibliothèque [TraMineR](http://traminer.unige.ch/index.shtml)), l'objectif est non seulement de trouver des profils types de déplacement, mais aussi d'identifier les caractéristiques les plus remarquables dans la différentiation des déplacements quotidiens.
 Les scripts sont fortement inspirés du projet [Mobiliscope](https://github.com/Geographie-cites/mobiliscope) et du projet [ADN Mobilité](https://hal.archives-ouvertes.fr/hal-01739602/file/ADN%20mobility%20-%20Swiss%20mobility%20conference%202016%20-%20Palmier_Hasiak_20161013.pdf).
@@ -21,13 +21,13 @@ Avant d'introduire le code, il se fait nécessaire remarquer que l'étude reste 
 
 - `3.1_createADNmobili.R` transformation de l'AGENDA mobilité de chaque personne en séquence d'états, l'ADN mobilité
 
-- `3.2_featuresSeq.R` traitement des données EDGT brutes pour sélectioner les vovariables d'étude (caractéristiques) de chauqe personne (perTable)
+- `3.2_featuresSeq.R` traitement des données EDGT brutes pour sélectioner les covariables d'étude (caractéristiques) de chauque personne (perTable)
 
 - `4.1_SA_Activité.RMD` analyse strcucturée sur les séquences d'activités des personnes: étude des covariables et création de typologie
 
 - `4.2_CA_Activité.RMD` extension pour l'analyse quantitative des groupes/typologies creés
 
-Le diagamme ci-dessous indique la dépendance entre les étapes de l'analyse
+Le diagramme ci-dessous indique la dépendance entre les étapes de l'analyse
 
 ![Diagramme de dépendance des étapes](Figures/Diagramme.PNG "Diagramme de dépendance des étapes")
 
