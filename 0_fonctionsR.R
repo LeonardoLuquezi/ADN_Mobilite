@@ -1,9 +1,11 @@
 # ================================================================================ #
-#                         Fonctions pour le traitement des donnees EDGT et
-#                                   pour l'analys de sequences ADN Mobilite
+#                 Fonctions pour le traitement des donnees EDGT et
+#                     pour l'analyse de sequences ADN Mobilite
+#
 # Juin 2020 - LUQUEZI Leonardo
 # ================================================================================ #
 
+# ---------- 0. Librarys ----------
 library(readr)
 library(dplyr)
 library(tidyr)

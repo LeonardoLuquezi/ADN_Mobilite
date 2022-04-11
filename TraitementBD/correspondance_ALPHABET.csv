@@ -2,18 +2,18 @@ Label;ShortLabel;Classe;Alphabet;Codification
 Domicile;DO;MOTIF;D;01_02
 Travail lieu habituel;TH;MOTIF;T;11
 Travail autre lieu;TN;MOTIF;W;12_13_81
-Etudes;ET;MOTIF;E;21_22_23_24_25_26_27_28_29
-Achats;AC;MOTIF;H;30_31_32_33_34_35
-Services;SR;MOTIF;S;41_43_44_45
-Restaurer;RH;MOTIF;M;53
-Loisirs;LO;MOTIF;L;51_52_54_82
+Etude;ET;MOTIF;E;21_22_23_24_25_26_27_28_29
+Achat;AC;MOTIF;H;30_31_32_33_34_35
+Service;SR;MOTIF;S;41_43_44_45
+Restauration;RH;MOTIF;M;53
+Loisir;LO;MOTIF;L;51_52_54_82
 Accompagnement;AC;MOTIF;C;61_62_63_64_71_72_73_74
 Autres Activites;AA;MOTIF;O;91
 Deplacement;DE;MODE;d;01_11_12_19_13_14_15_16_21_22_61_81_82_32_34_35_36_37_91_92_93_94_95_38_39_41_42_52_53_71_72_73_30
-Actifs;Actifs;OCC;1;1_2
-Etudiants;Etudiants;OCC;2;3_4_5
+Actif;Actif;OCC;1;1_2
+Etudiant;Etudiant;OCC;2;3_4_5
 Sans Emploi;SE;OCC;3;6
-Retraites;Retraites;OCC;4;7
+Retraite;Retraite;OCC;4;7
 Reste Foyer;Reste Foyer;OCC;5;8
 Autres Occupations;AutresOcc;OCC;0;9
 Faible;Faible;EDUC;1;1_7_9
@@ -21,16 +21,16 @@ Intermediaire;Intermediaire;EDUC;2;2_3
 Eleve;Eleve;EDUC;3;4_5_8
 Tres Eleve;TresEleve;EDUC;4;6
 Autres Neduc;AutresNeduc;EDUC;0;0_
-Non Actifs;N Actifs;PCSC;0;8_9_7_0
+Non Actif;N Actif;PCSC;0;8_9_7_0
 Agriculteur;Agri;PCSC;1;1
-Ouvriers;Ouvriers;PCSC;2;6
+Ouvrier;Ouvrier;PCSC;2;6
 Employe;Employe;PCSC;3;5
 Intermediaire;Intermediaire;PCSC;4;4
-Cadres;Cadres;PCSC;5;3
+Cadre;Cadres;PCSC;5;3
 Artisan Commer Chef;ACC;PCSC;6;2
 Permis Oui;Permis Oui;PERMIS;1;N
 Permis Non;Permis Non;PERMIS;2;N
-Permis Acc ou Leçons;Permis AL;PERMIS;3;N
+Permis Acc ou Le?ons;Permis AL;PERMIS;3;N
 Disp voiture Oui;Disv Oui;DISV;1;1_2_3
 Disp voiture Non;Disv Non;DISV;2;4_
 "Age[0;16[";"A[0;16[";KAGE;0;N

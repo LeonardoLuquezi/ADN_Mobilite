@@ -1,10 +1,10 @@
 # ================================================================================ #
 #                           Construction de l'ADN mobilite  
-#                                       script
+#                                       
 # Juin 2020 - LUQUEZI Leonardo
 # ================================================================================ #
 
-# 0. Librarys
+# ---------- 0. Librarys ----------
 library(stringr)
 library(dplyr)
 library(tidyr)
@@ -14,7 +14,7 @@ library(janitor)
 library(reshape2)
 source(file = "0_fonctionsR.R")
 
-# ---------- 1.Path management ----------
+# ---------- 1. Path management ----------
 
 # Path lire AGENDA_mobilité .RDR 
 PathR.AGENDA_Mobilite <- "DataR/Nantes_AGENDA_Mobi.RDS"
@@ -57,7 +57,7 @@ adnTable <- agendaTable %>%
 
 rm(agendaTable)
 
-# ---------- 3.4 Fonction : Creation des ADN Mobilite en utilisant un DataFrame type adnTable.RDS --------
+# Creation des ADN Mobilite en utilisant un DataFrame type adnTable.RDS
 
 ADN_M <- adnMobilite(adnTable)
 
@@ -70,9 +70,8 @@ ADN_M[col.names] <- lapply(ADN_M[col.names], factor, levels = alphabetTable$Alph
 
 rm(adnTable, col.names, alphabetTable)
 
-# ------- 4. Sauvegarder ADN Mobilite. RDS et les tables alphabet, mode et motif .RDS -------
+# ---------- 4. Sauvegarder ADN Mobilite. RDS et les tables alphabet, mode et motif .RDS -------
 save(ADN_M, file = PathR.ADN_Mobilite)
 
-# 5. Nettoyage Global Environement
+# ---------- 5. Nettoyage Global Environement -----------
 rm(list = ls())
-

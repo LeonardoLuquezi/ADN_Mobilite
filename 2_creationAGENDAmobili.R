@@ -1,10 +1,11 @@
 # ================================================================================ #
-#                        Construction de la base de donnees 
-#                                       script
+#                    Traitement des bases de donnees EMD 
+#                 et construction de l'Agenda des personnes
+#                                       
 # Juin 2020 - LUQUEZI Leonardo
 # ================================================================================ #
 
-## 0. Librarys
+# ---------- 0. Librarys ----------
 library(stringr)
 library(dplyr)
 library(tidyr)
@@ -13,7 +14,7 @@ library(Hmisc)
 library(reshape2)
 source(file = "0_fonctionsR.R")
 
-## ---------- 1. Path management ----------
+# ---------- 1. Paths management ----------
 # Path: lire les données brutes .RDR de l'enquete
 PathR.Deplacement <- "DataR/BD_brute_depl.RDS"
 
@@ -30,7 +31,7 @@ PathR.BD_Deplacement <- "DataR/Nantes_BD_pre_depl.RDS"
 # ---------- 2. Chargement de la base de données brutes .RDS ----------
 load(PathR.Deplacement)
 
-# ---------- 3. Prétraitement: Creation des nouvelles tables avec les features des sequences ----------
+# ---------- 3.1 Pretraitement: Creation des nouvelles tables avec les features des sequences ----------
 tripTable <- BD_depl_EMD
 rm(BD_depl_EMD)
 
@@ -51,20 +52,23 @@ tripTable <- tripTable %>%
 tripTable <- tripTable %>% 
   unite(D8, c("D8A","D8B"), sep = "", remove = T)
 
-# Verification: nombre de personnes
-nrow(tripTable %>% select(ID_IND) %>% group_by(ID_IND) %>% count(ID_IND))
+# Verification: nombre de personnes enquetees
+nrow(tripTable %>% 
+       select(ID_IND) %>% 
+       group_by(ID_IND) %>% 
+       count(ID_IND))
 
 # ---------- 3.3 Zones Fines ----------
 load(PathR.alphaTable)
-# Selection des secteurs de tirage de Aire Urbaine de Nantes
-st.encodage <- alphabet2TE( alphabetTable, classe.alphabet = "ZONAGE", variable.jointby = "PTIR")
+# Selection des secteurs de tirage de l'Aire Urbaine de Nantes
+st.encodage <- alphabet2TE(alphabetTable, classe.alphabet = "ZONAGE", variable.jointby = "PTIR")
 
 tripTable <-  tripTable %>% 
   filter(substr(ID_IND, start = 1, stop = 3) %in% st.encodage[,1])
 
 rm(st.encodage)
 
-# ---------- 3.4 Agenda : construction de la table tripTable apres la selection des ZFs ----------
+# ---------- 3.4 Agenda : construction de la table tripTable ----------
 # Variables pour la creation de l'AGENDA
 tripTable <- tripTable %>% 
   select(ID_IND, NDEP, D3, D7, MODP, D4, D8, D2A, D5A) %>% 
@@ -72,6 +76,7 @@ tripTable <- tripTable %>%
 
 # ---------- 4. Sauvegarder BD's pretraitees  ----------
 save(tripTable, file = PathR.BD_Deplacement)
+
 
 # ---------- 5. Creation AGENDA Mobilite ----------
 # ---------- 5.1. Codification des activites en utilisant un DataFrame type tripTable .RDS ----------
@@ -87,7 +92,5 @@ rm(actTable)
 # ---------- 6. Sauvegarder AGENDA Mobilite Chaine de Caracteres .RDS ----------
 save(agendaTable, file = PathR.AGENDA_Mobilite)
 
-# 7. Nettoyage Global Environement
+# ---------- 7. Nettoyage Global Environement -----------
 rm(list = ls())
-
-

@@ -15,7 +15,7 @@ bibliography: references.bib
 
 # Introduction
 
-L'objectif de cette étude est d'analyser les ADN mobilité (séquence d'états d'activités) (@ADNMobil2017) des personnes résidant dans l'aire urbaine de Nantes. À l'aide d'outils statistiques, on mesure l'influence des covariables (les caractéristiques des individus comme l'occupation, le niveau d'éducation, etc.) sur l'évolution des mobilités quotidiennes dans la journée. Finalement on suggère des classification typologiques selon les porfils type de déplacement.
+L'objectif de cette étude est d'analyser les ADN activité (séquence d'états d'activités) (@ADNMobil2017) des personnes résidant dans l'aire urbaine de Nantes. À l'aide d'outils statistiques, on mesure l'influence des covariables (les caractéristiques des individus comme l'occupation, le niveau d'éducation, etc.) sur l'évolution des mobilités quotidiennes dans la journée. Finalement on suggère des classification typologiques selon les porfils type de déplacement.
 
 Pour cela, on utilise deux approches différentes, les algorithmes de clustering ou classement et les agorithmes d'arbre de régression. Les bases statistiques se fixent sur l'analyse de variance (ANOVA-like).
 
@@ -25,7 +25,7 @@ Cette introduction est dédiée à:
 
 * la lecture des biliotéques utilisées,
 * la lecture des fonctions du script *0_functionsR.R*,
-* le chargement et la jointure entre l'ADN mobilité (*ADN_M*; ensemble de séquences avec leur *ID_IND*) et le tableau de features des individus (*perTable*; *ID_IND* avec ses caractéristiques associées)
+* le chargement et la jointure entre l'ADN activité (*ADN_M*; ensemble de séquences avec leur *ID_IND*) et le tableau de features des individus (*perTable*; *ID_IND* avec ses caractéristiques associées)
 * la création de la structure de séquences propre à Traminer (*adn.seq*) en specifiant l'alphabet, les couleurs et d'autres paramètres,
 * la modification du pas de temps de chaque séquence d'états, puis la mise à jour de la structure adn.seq
  
@@ -87,7 +87,7 @@ rm(perTable)
 
 ## Création des séquences TraMineR
 
-Pour créer une séquence au format TraMineR à partir d'un échantillon de séquences on a besoin d'un alphabet d'états, le noms de ces états (*label* et *long label*), des couleurs et du nom de chaque pas de temps. Les deux premiers se trouvent dans le fichier *alphabet.csv* (ou similaire), le troisième est au choix de l'utilisateur et le dernier est généré automatiquement par la fonction *ctimenames()*. La journée commence à 04h00 du matin et fini à 27h59, c'est-à-dire, 03h59 du lendemain. Ce choix se justifie pour éviter l'ambiguité entre différents périodes de la journée. En sortie du *Chunk* on affiche l'alphabet, le nombre total de séquences et leur taille.
+Pour créer une séquence au format TraMineR à partir d'un échantillon de séquences on a besoin d'un alphabet d'états, le noms de ces états (*label* et *long label*), une couleur associé à chaque état et du nom de chaque pas de temps. Les deux premiers se trouvent dans le fichier *alphabet.csv* (ou similaire), le troisième est au choix de l'utilisateur et le dernier est généré automatiquement par la fonction *ctimenames()*. La journée commence à 04h00 du matin et fini à 27h59, c'est-à-dire, 03h59 du lendemain. Ce choix se justifie pour éviter l'ambiguité entre différents périodes de la journée. En sortie du *Chunk* on affiche l'alphabet, le nombre total de séquences et leur taille.
 
 ```{r, collapse=T}
 # Couleur des etats
@@ -127,7 +127,7 @@ Le choix du pas de temps, c'est-à-dire, l'intervalle de temps de chaque état (
 ```{r, message = F, warning = FALSE, eval = T}
 # Utilisation de la fonction seqtimestep pour modifier le pas de temps selon tstep
 # Pas de temps de 15 min
-adn.seq <- seqtimestep(adnseq = adn.seq, tstep = 15 )
+adn.seq <- seqtimestep(adnseq = adn.seq, tstep = 10 )
 ```
 
 Après le choix du nouveau pas de temps, il ne faut pas oublier de mettre à jour les séquences au format TraMineR. On remarque à la sortie du *Chunk* la nouvelle longueur minimale et maximale des séquences.
@@ -138,12 +138,12 @@ adn.seq <- seqdef(data = adn.seq ,
                   id = ADN_M$ID_IND,
                   states = alphabetTable$Alphabet, 
                   labels = alphabetTable$Label,
-                  xtstep = 4,
+                  xtstep = 6,
                   cpal = adn.colors)
 ```
 
 ```{r, include=FALSE}
-# Netoyage de variables et de données
+# Netoyage de variables et de données qui ne seront plus utiles
 rm(perTable, PathR.alphaTable, PathR.BD_ADNMobi, PathR.IND_Carac)
 rm(minutes)
 rm(adn.colors, nstep)
@@ -155,23 +155,23 @@ Cette section analyse l'ensemble de séquences à travers des indicateurs global
 
 * l'introduction aux outils TraMineR (@gabadinho2009mining)
 * la visualisation des séquences de plusieurs points de vue
-* l'application d'une analyse longitudinale et une analyse transversale sur toutes les séquences
+* l'application d'une analyse longitudinale et d'une analyse transversale sur toutes les séquences
 
 ## Prémiers résultas
 
 La fonction *seqplot()* est un bon choix pour commencer une analyse de séquences. Avec une syntaxe simple, elle propose neuf analyses en changeant seulement le paramètre *type*. Ci-dessous une liste d'analyses qui peuvent être faites avec la fonction :
 
 * "d" pour les diagrammes de distribution des états (chronogrammes), 
-* "f" pour tracer la fréquence des séquences, 
-* "Ht" pour tracer l'entropie transversale, 
-* "i" pour tracer l'index des séquences sélectionnés,
-* "I" pour tracer touts les l'index, 
-* "ms" pour tracer la séquence des états modaux,
-* "mt" pour tracer "mean times plots",
-* "pc" pour tracer "parallel coordinate plots",
-* "r" pour tracer "representative sequence plots".
+* "f" pour la fréquence des séquences, 
+* "Ht" pour l'entropie transversale, 
+* "i" pour l'index des séquences sélectionnés,
+* "I" pour touts les l'index, 
+* "ms" pour la séquence des états modaux,
+* "mt" pour "mean times plots",
+* "pc" pour "parallel coordinate plots",
+* "r" pour "representative sequence plots".
 
-On affiche trois graphiques: l'actogramme de 10 individus pour illustres les séquences, la fréquence de séquences pour identifier les séquences les plus courantes et le diagramme de distribution d'états pour visualiser l'évolution des activités dans la journée.
+On affiche trois graphiques: l'actogramme de 10 individus pour illustres les séquences, la fréquence de séquences pour identifier les séquences les plus courantes et le diagramme de distribution d'états pour visualiser l'évolution de l'ensemble d'activités dans la journée.
 
 Pour les appeler *seqplot(type = "i", ...)* ou *seqiplot()*:
 ```{r eval= T, fig.height=7, fig.width=10}
@@ -237,7 +237,7 @@ D'un point de vue pratique on calcule la distance entre deux séquences à trave
 Ce coût dépend en effet des opérations de transformation autorisées et de leurs coûts individuels. Il y a deux types d'opérations élémentaires disponibles sur TraMineR:
 
 * la substitution (*sub*) d'un élément par un autre
-* l'insertion ou la suppression d'un élément (*indel*), ce qui génère un décalage d'une seule position de tous les éléments à sa droite.
+* l'insertion d'un élement neutre suivi de la suppression du dérnier élement de la sequence (*indel*). Cet opération génère un décalage d'une position de tous les éléments à la droite du élement inseré.
 
 $$\begin{array}{lll}
 \hline \text { Distance } & {\text { Transformations used }} & \text { Insertion and deletion } \\
@@ -248,16 +248,24 @@ $$\begin{array}{lll}
 \hline
 \end{array}$$
 
-D'un côté, si on calcule les disimilarités uniquement avec les substitutions (Hamming), on privilégie le "timing"; les personnes qui font la même activité en même temps sont moins disimilaires. De l'autre côté, si on calcule les dissimilarités uniquement avec l'*indel* (Levenshtein II), on privilégie la durée des activités; les personnes qui font les mêmes activités dans la journée avec des durées équivalentes sont moins dissimilaires (sous-séquence commune la plus longue). (@lesnard2014using)
+De manière générale, si l'on calcule les disimilarités uniquement avec les substitutions (Hamming), on privilégie le "timing" dans l'analyse; les personnes qui font la même activité en même temps sont moins disimilaires. Inversement, si l'on calcule les dissimilarités uniquement avec l'*indel* (Levenshtein II), on privilégie la durée des activités dans l'analyse; les personnes qui font les mêmes activités dans la journée avec des durées équivalentes sont moins dissimilaires (sous-séquence commune la plus longue). (@lesnard2014using)
+
+Considérant que l'exécution de toute activité est unique et que l'exécution d'une même activité à différents moments de la journée est également source de différenciation, l'utilisation de la méthode Hamming à coût de dissimilarité constant a été retenue pour une première analyse. Par hypothèse, comme évoqué précédemment, on privilégie le "timing" dans le calcul des dissimilarités d'exécution des activités.
+
 
 ```{r, eval = F, collapse = T}
 # OM avec substitution et indel
 # Definition des couts de substitution
-submat <- seqsubm(adn.seq, method = "CONSTANT", cval = 2) 
+submat <- seqsubm(adn.seq, method = "CONSTANT", cval = 10) 
 submat
 
 # Calcul de la matrice d'Optmal Matching Distances
-dist.om <- seqdist(adn.seq, method = "OM", indel = 1, sm = submat)
+
+# Exemple : substitution + indel
+# dist.om <- seqdist(adn.seq, method = "OM", indel = 1, sm = submat)
+
+# Exemple : substitution
+dist.om <- seqdist(adn.seq, method = "HAM", sm = submat)
 
 # Illustration de la matrice de dissimilarites
 dist.om [1:4,1:4]
@@ -280,11 +288,11 @@ Cette section est dédiée à :
 library(cluster)
 library(WeightedCluster)
 ```
-La classification hiérarchique a pour but le regroupement des séquences en clusters en se basant sur la matrice de disimilarités. Dans un premier temps, l'algorithme considère chaque observation comme un groupe. À chaque itération, on regroupe les deux groupes les plus proches, jusqu’à ce que toutes les observations soient dans un seul groupe. La succession des regroupements effectués est représentée sous la forme d’un "arbre", le dendrogramme. Une fois le schéma agglomératif construit, l'utilisateur sélectionne le nombre de clusteurs en “coupant” l’arbre de regroupement au niveau correspondant (@studerWCmanuel). 
+La classification hiérarchique a pour but le regroupement des séquences en clusters en se basant sur la matrice de disimilarités. Dans un premier temps, l'algorithme considère chaque observation comme un groupe d'une unité. À chaque itération, on regroupe les deux groupes les plus proches, ou les moins dissimilaires, jusqu’à ce que toutes les observations soient dans un seul groupe. La succession des regroupements effectués est représentée sous la forme d’un "arbre", le dendrogramme. Une fois le schéma agglomératif construit, l'utilisateur sélectionne le nombre de clusteurs souhaité en “coupant” l’arbre de regroupement au niveau correspondant (@studerWCmanuel). 
 
 Une critique adressée aux procédures hiérarchiques est que la fusion de deux groupes se fait en minimisant un critère local, la disimilarité. Alors, on estime localement la perte d’information due à un regroupement. Par conséquent, il est possible qu’"un choix bon au niveau local conduise à des résultats médiocres à un niveau de regroupement supérieur". (@studerWCmanuel)
 
-En ce qui concerne le calcul des distances entre groupes, il en existe plusieurs méthodes. On peut comparer les différents types de liaison grâce au coefficient d'agglomération qui change selon la matrice de disimilarités. Dans le classement hiérarchique suivant on applique la méthode *Ward* à l'aide de la bibliothèque *WeightedCluster*.
+En ce qui concerne le calcul des distances entre plusieurs groupes, il en existe plusieurs méthodes. On peut comparer les différents types de liaison grâce au coefficient d'agglomération qui change selon la matrice de disimilarités. Dans le classement hiérarchique suivant on applique la méthode *Ward* à l'aide de la bibliothèque *WeightedCluster*.
 
 ```{r, eval = F}
 # Definir la matrice de dissimilarites pour le classement hierarchique
@@ -315,7 +323,7 @@ Ensuite, en utilisant le software *GraphViz*, on affiche le schéma agglomérati
 wardTree <- as.seqtree(clusterward1, seqdata= adn.seq, diss= matrice.diss, ncluster = 12)
 
 # Utilisation de Graphviz
-seqtreedisplay(wardTree, type="d", border=NA, show.depth=TRUE, with.legend = T, cex.legend = 2)
+seqtreedisplay(wardTree, type="d", border=NA, show.depth=TRUE, with.legend = T, cex.legend = 2, gvpath = 'C:/Program Files/Graphviz')
 
 rm(wardTree)
 ```
@@ -328,9 +336,9 @@ L'avantage de l’algorithme P.A.M est qu'il cherche à maximiser un critère gl
 
 ## Étude de la qualité d'une partition
 
-Après l'étape de classement, il est nécessaire étudier la qualité statistique des clusters crées. Un classement de bonne qualité est celui qui possède à la fois des distances inter-groupes élevées, ou autrement dit, les groupes sont le plus disimilaire possible entre eux, mais aussi une forte homogénéité intra-groupe. L'interêt de cette étude est de pouvoir comparer des classements et de trouver la quantité idéale de clusters, un outil d'aide à la décision. Comme il en existe 10 indicateurs dans la bibliothèque *WeightedCluster*, à titre d'exemple, on se focalise sur deux indicateurs.
+Après l'étape de classement, il est nécessaire étudier la qualité statistique des clusters crées. Un classement de bonne qualité est celui qui possède à la fois des distances inter-groupes élevées, ou autrement dit, des groupes qui sont le plus disimilaire possible entre eux, mais aussi une forte homogénéité intra-groupe. L'interêt de cette étude est de pouvoir comparer des classements et de trouver la quantité idéale de clusters, un outil d'aide à la décision. Comme il en existe 10 indicateurs dans la bibliothèque *WeightedCluster*, à titre d'exemple, on se focalise sur deux indicateurs.
 
-Le premier s'appelle *Average Silhouette Width* (ASW), la largeur moyenne de la silhouette. Cet indice traduit l'idée de cohérence de l’assignation d’une observation à un groupe donné. Sa valeur varie entre 1 et -1. Soit $a_{i}$ la distance moyenne pondérée d'une observation *i* aux autres membres de son groupe *k*, $b_{i}$ la distance moyenne pondérée au groupe ${\ell}$ **le plus proche**, $W_{k}$ la somme des pondérations des observations appartenant au groupe *k* , w_{i} le pois d'une observation *i* et $d_{i j}$ la distance entre l'observation *i* et *j*, la silhouette $s_{i}$ d’une observation se calcule de la manière suivante.
+Le premier s'appelle *Average Silhouette Width* (ASW), la largeur moyenne de la silhouette. Cet indice traduit l'idée de cohérence de l’affectation d’une observation à un groupe donné. Sa valeur varie entre 1 et -1. Soit $a_{i}$ la distance moyenne pondérée d'une observation *i* aux autres membres de son groupe *k*, $b_{i}$ la distance moyenne pondérée d'une observation aux autres membres du groupe ${\ell}$ **le plus proche**, $W_{k}$ la somme des pondérations des observations appartenant au groupe *k* , w_{i} le pois d'une observation *i* et $d_{i j}$ la distance entre l'observation *i* et *j*, la silhouette $s_{i}$ d’une observation se calcule de la manière suivante.
 
 $$a_{i}=\frac{1}{W_{k}-1} \sum_{j \in k} w_{j} d_{i j}$$
 
@@ -358,7 +366,7 @@ $$C_{\text {index}}=\frac{S-S_{\min }}{S_{\max }-S_{\min }}$$
 
 ### Mesure de la qualité statistique d'une seule partition
 
-Avant d'étudier le choix des partitions, on choisit les quatre clusters crées par l'application de la classement hiérarchique. L'intérêt est d'évaluer cette partition selon tous les indicateur de la bibliothèque *WeightedCluster* pour mettre en lumière la diversité d'indicateur de la bibliothèque. Les résultats obtenus sont les suivants.
+Avant d'étudier le choix des partitions, on choisit les quatre clusters crées par l'application de la classement hiérarchique. L'intérêt est d'évaluer cette partition selon tous les indicateur de la bibliothèque *WeightedCluster* pour mettre en lumière sa diversité d'indicateurs. Les résultats obtenus sont les suivants.
 
 ```{r, eval = F, collapse=F, echo=T}
 # Definir la matrice de dissimilarites pour l'etude de la qualité des partitions
@@ -414,26 +422,26 @@ seqIplot(adn.seq, group=clusterRange$clustering$cluster11, border=NA, with.legen
 
 # Analyse de covariable
 
-Dans cette section, on applique une méthodologie pour analyser la relation entre les séquences d'états d'activités et les covariables. Inspirée par des principes d'analyse de la variance, cette approche examine comme les covariables expliquent la divergence des profils d'activités dans la journée. Les disimilarités par paires sont fondamentales pour déterminer l'écart entre les séquences, ce qui permet de développer une série d'outils d'analyse basées sur la signification statistique. Alors, on utilise les écarts pour tester les différences entre les groupes, un pseudo-R2 pour mesurer la force des associations séquence-covariables et une statistique de Levene généralisée pour tester les différences dans les écarts intra-groupe.
+Dans cette section, le but est d'analyser la relation entre les séquences d'activités et les caractéristique socio-économiques des personnes. Inspiré par l'analyse de la variance, cet approche examine comme les covariables expliquent la différenciation des profils d'activités dans la journée. Ainsi, la matrice de disimilarités par paires calculée précedament est utilisée afin de déterminer l'écart entre les séquences d'un groupe, ce qui permet ensuite de développer une série d'outils d'analyse basées sur la signification statistique. Alors, on s'interesse a la variance pour mésurer la dispertion d'un groupe d'obsevations autour de leur moyenne, au coefficient de détermination pseudo-R2 pour mesurer la force des associations séquences-carcatéristiques et au test Levene généralisée pour évaluer l'homogénéité des variances des groupes. 
 
-L'analyse de covariable est dédié à:
+Cette partie de l'étude est donc dédié à:
 
-* l'introduction à la somme des carrées totale (SST) des résidus, à la somme des carrées au sein des groupes (SSW) et à la somme des carrées entre groupes (SSB) .
-* l'analyse de type ANOVA; association entre les trajectoires et chacune des covariables considérées indépendamment.
+* l'introduction à la somme des carrées totale des résidus (SST), à la somme des carrées au sein des groupes (SSW) et à la somme des carrées entre groupes (SSB) .
+* l'analyse de type ANOVA; association entre les journées d'activités et chacune des covariables considérées indépendamment.
 
 ## Divergence basée sur les disimilarités
 
-Le concept de "divergence" considéré ici évalue la ***diversité des trajectoires***. Inspirée par l'idée de variance, la divergence est calculée à partir d'une matrice de disimilarités. (@studer2011discrepancy)
+Le concept de "divergence" considéré ici évalue la ***diversité de profils d'activité***. Inspirée par l'idée de variance, la divergence est calculée à partir d'une matrice de disimilarités. On préféré utiliser le terme *discrepancy* ou divergence puisque la variance est définie théoriquement pour des distances euclidiennes, c'est qui n'est pas le cas d'une matrice de disimilarité par paires. (@studer2011discrepancy)
 
-L'élement clé de la divergence est la somme des carrée des résidus d'un échantillon. Soit $W$ le nombre d'observations total d'un échantillon et $d_{i j}$ une mesure de disimilarité non-euclidienne entre l'observation $i$ et $j$, il est possible de traduire la somme des carrées $SS$ dans la rélation suivante.
+L'élement clé de la divergence est la somme des carrée des résidus d'un groupe d'observations. Soit $W$ le nombre d'observations total d'un groupe et $d_{i j}$ une mesure de disimilarité entre l'observation $i$ et $j$, il est possible de traduire la somme des carrées $SS$ dans la rélation suivante:
 
 $$S S=\frac{1}{W} \sum_{i=1}^{n} \sum_{j=i+1}^{n} d_{i j}^{2}$$
 
-En appliquant la définition $s^{2}=\frac{1}{W} S S$ de la variance de l'échantillon, on obtient une mesure de l'écart des objets de séquence. Puisque la variance est théoriquement définie pour les distances euclidiennes, on préféré le terme *discrepancy*. On remarque que la divergence est égal à la moitié de la moyenne pondérée des disimilarités par paires.
+En appliquant la définition $s^{2}=\frac{1}{W} S S$ de la variance, on obtient une mesure de l'écart des objets d'un groupe. On remarque également que la divergence est égal à la moitié de la moyenne pondérée de la somme des disimilarités.
 
 $$s^{2}=\frac{1}{2 W^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} d_{i j}^{2}$$
 
-Dans l'exemple suivant on calcule la divergence totale pour les séquences de l'aire urbaine de Nantes, puis, en considérant quatre cluster issues du cluster hiérarchique, la divergence interne à chaque groupe:
+Dans l'exemple suivant on calcule la divergence totale pour les séquences de l'aire urbaine de Nantes, puis, en considérant les quatre groupes issues du cluster hiérarchique, la divergence interne à chaque groupe:
 
 ```{r, eval=F, warning=FALSE, collapse=T}
 # Definir la matrice de dissimilarites pour les testes ANOVA et MANOVA
@@ -452,34 +460,36 @@ print.data.frame(data.frame(Groupe_Divergence =
 
 ## Analyse de variance (ANOVA)
 
-La somme des carrées des résidus est également le concept clé pour mesurer l'association entre les séquences et les covariables. La décomposer entre la partie expliquée ***entre les groupes*** (SSB) et la partie résiduelle ***au sein des groupes*** (SSW) permet de mesurer les variations entre les profils de déplacement et de tester les différences entre les groupes. (@studer2011discrepancy). 
+La somme des carrées des écarts est également un concept clé pour mesurer l'association entre les séquences et les caractéristiques socio-économiques. Dans un premiers temps, on décompose la somme totale des carrées des écarts (SST) entre la somme des carrées des écarts entre groupes (SSB), c'est-à´-dire, la partie explicativé de la différenciation ***entre les groupes***  et la somme des carrées des écarts au sein des groupes (SSW), c'est-à´-dire, la partie résiduelle ***au sein des groupes***. Ces composantes permetent de mesurer les variations entre les profils d'activité et de tester les différences entre les groupes. (@studer2011discrepancy). 
 
 $$S S_{T}=S S_{B}+S S_{W}$$
 
-Tous les termes de cette équation peuvent être dérivés de la définition de somme des carrées (SS). La somme totale des carrés (SST) et la somme des carrées au sein des groupes (SSW) sont calculées directement avec la formule, SSW étant simplement la somme des sommes des carrés intérieurs de chaque sous-groupe. La somme des carrées entre groupes SSB est alors obtenue en prenant la différence entre SST et SSW.
+Au niveau opérationnel, tous les termes de cette équation peuvent être dérivés de la définition de somme des carrées des écarts (SS). La somme totale des carrés des écarts (SST) et la somme des carrées des écarts au sein des groupes (SSW) sont calculées directement avec la formule, SSW étant simplement la somme des sommes des carrés des écarts intérieurs de chaque sous-groupe. La somme des carrées des écarts entre groupes (SSB) est alors obtenue en prenant la différence entre SST et SSW.
 
-Premièrement, on cherche à décrire statistiquement la partie de la divergence qui s'explique par les différents regroupements. Pour cela on utilise la mesure du $R^{2}$. 
+Avec ces composantes, on cherche donc à décrire statistiquement la partie de la divergence qui s'explique par un regroupement donné. Pour cela on utilise la mesure du $R^{2}$. 
 
 $$R^{2}=\frac{S S_{B}}{S S_{T}}$$
 
-$R^{2}$ est la ***mesure de la force des associations séquence-regroupement.***. Il traduit la proportion de la variabilité totale expliquée par le modèle. On comprend comme modèle les regroupements générés, par exemple, par une méthode clustering ou les variables socio-demographiques analysées. Plus la variabilité est expliquée, meilleur est le modèle. On l'appelle également de pseudo R-carré parce qu'il ressemble à l'R-carré dans le sens où il est sur une échelle similaire, allant de 0 à 1, bien que certains pseudo R-carré n'atteignent jamais 0 ou 1, avec des valeurs plus élevées indiquant un meilleur modèle fit. Cependant, il ne peut pas être interprété comme on interpréterait un R-carré des moindres carrés ordinaires (OLS).
+$R^{2}$ est la ***mesure de la force de l'associations séquence-regroupement.***. Ele traduit la proportion de la variabilité totale expliquée par le modèle. On comprend par modèle les regroupements générés, par exemple, par une méthode de clustering ou des groupes définis par des variables socio-économiques. Essentiellement, plus la variabilité est expliquée, plus la valeur R-carré se rapproche de 1 et plus explicatif est le modèle.
 
-Pralèllement, on s'intéresse à la ***comparaison de modèles statistiques qui peuvent être ajustés sur un échantillon***. On utilise donc un Test-F pour identifier les modèles qui correspondent le mieux à la différentiation de la population en question. La valeur F est le rapport, pondéré par des dégrées de liberté, entre les variations expliquée ***entre les groupes*** (SSB) et les variations résiduelles ***au sein des groupes*** (SSW). Soit, $W$ le nombre d'observation totale et $m$ le nombre de groupes du modèle en question:
+On l'appelle également de pseudo R-carré parce qu'il ressemble à l'R-carré dans le sens où il est sur une échelle similaire, allant de 0 à 1, cependant, il ne peut pas être interprété comme on interpréterait un R-carré des moindres carrés ordinaires (OLS).
+
+Pralèllement, on s'intéresse à la ***comparaison de modèles statistiques qui peuvent être ajustés sur un échantillon***. On utilise donc un Test-F pour identifier les modèles qui correspondent le mieux à la différentiation de la population en question. La valeur F est le rapport pondéré par des dégrées de liberté entre les variations explicatives ***entre les groupes*** (SSB) et les variations résiduelles ***au sein des groupes*** (SSW). Soit, $W$ le nombre d'observation totale et $m$ le nombre de groupes du modèle en question:
 
 $$F=\frac{S S_{B} /(m-1)}{S S_{W} /(W-m)}$$
 
-La signification statistique de l'association ne peut pas être évaluée avec la distribution F de Fisher. La valeur statistique F ne suit pas une distribution de Fisher comme dans l'ANOVA classique (@studer2011discrepancy). Par conséquent, on applique un test de permutation pour calculer la valeur critique. À chaque étape de l'itération, l'algorithme modifie le groupe (ou la valeur des covariables) attribué à chaque séquence à travers la permutation choisie au hasard. On obtient ainsi une valeur $F_{perm}$ pour chaque permutation. En répétant cette opération *R* fois, une distribution empirique non paramétrique de F est calculée. Elle caractérise sa distribution en supposant que les séquences sont attribuées aux cas indépendamment des facteurs explicatifs. À partir de cette distribution, on peut évaluer la signification de la statistique $F_{obs}$ observée par la proportion de $F_{perm}$ qui est supérieure à $F_{obs}$, ce qui répresente la valeur critique *p-value*. Cette valeur est lié à ***l'acceptation ou le refus de l'hypothèse nulle***, hypothèse postulant l'égalité entre des paramètres statistiques, normalement la moyenne ou la variance, dit autrement, l'hypothése que les échantillons sont pris sur de populations équivalantes. 
+La signification statistique de l'association ne peut pas être évaluée avec la distribution F de Fisher. La valeur statistique F ne suit pas une distribution de Fisher comme dans l'ANOVA classique (@studer2011discrepancy). Par conséquent, on applique un test de permutation pour calculer la valeur critique. À chaque étape de l'itération, l'algorithme modifie au hasard le groupe attribué à chaque séquence. Ainsi, on obtient une valeur $F_{perm}$ pour chaque permutation. En répétant cette opération *R* fois, une distribution empirique de F est calculée. Elle caractérise sa distribution en supposant que les séquences sont attribuées aux cas indépendamment des facteurs explicatifs. À partir de cette distribution, on peut évaluer la signification de la statistique $F_{obs}$ observée par la proportion de $F_{perm}$ qui est supérieure à $F_{obs}$, ce qui répresente la valeur critique *p-value*. Cette valeur est lié à ***l'acceptation ou le refus de l'hypothèse nulle***, hypothèse postulant l'égalité entre des paramètres statistiques, normalement la moyenne ou la variance, dit autrement, l'hypothése que les échantillons sont pris sur de populations équivalantes. 
 
 Dans le cas du test F, un *p-value* inférieur au niveau de signification choisie (normalement 5%) indique que la trajectoire d'un individu dans la journée diffère de façon signiﬁcative au regard de la covariable en étude. Il est généralement admis que 5 000 permutations devraient être utilisées pour évaluer un seuil de signification de 1% et 1 000 pour un seuil de 5% (@studer2011discrepancy).
 
-Finalement, on s'é à la ***mesure de l'égalité des écarts intra-groupe, autrement dit, test de l'homogénéité de la divergence***, le test Levene. D'un point de vue géométrique, lorsque on évalue l'homogénéité de la divergence, on mesure les différences dans le rayon de la distribution des séquences au sein de chaque groupe, une analyse de variance appliquée sur la discrepance. Plus de détails par rapport à son calcul est trouvée dans la bibliographie (@studer2011discrepancy). 
+Finalement, on s'é à la ***mesure de l'égalité des écarts intra-groupe, autrement dit, test de l'homogénéité de la divergence***, le test Levene. Si le test Levene est statistiquement significatif, l'hypothèse d'homogénéité des variances doit être rejetée. D'un point de vue géométrique, lorsque on évalue l'homogénéité de la divergence, on mesure les différences dans le rayon de la distribution des séquences au sein de chaque groupe, une analyse de variance appliquée sur la discrepance. Plus de détails par rapport à son calcul est trouvée dans la bibliographie (@studer2011discrepancy). 
 
 ### Aanalyse ANOVA detailée apliquée à une covariable
 
-Dans un premier temps, à titre d'exemple, on applique une ANOVA détaillée en utilisant la covariable binaire *SEX* (homme ou femme). Les résultas sont affichés ci-dessous:
+Dans un premier temps, à titre d'exemple, on applique une ANOVA détaillée en utilisant la covariable *OCC* (1 : actif ; 2 : étudiant ; 3 : sans emploi ; 4 : retraité ; 5 : inactif). Les résultas sont affichés ci-dessous:
 ```{r eval=F, echo=F, collapse=TRUE}
 # Choix de la covariable
-covariate <- "SEX"
+covariate <- "OCC"
 
 # Analyse pour une covariante
 da.cov <- dissassoc(matrice.diss, group = ADN_M[[covariate]], R = 5000)
@@ -544,9 +554,9 @@ rm(k, covariate, covariates)
 
 ## Analyse à l’aide d’un arbre de régression sur les séquences
 
-L'objectif d'un arbre de régression est de trouver les caractéristiques les plus importants dans la variations des profils d'activités compte tenu de leurs interactions. Essentiellement, l'algorithme d'un arbre de régression commence avec tous les individus regroupés dans un nœud initial. Il partitionne récursivement chaque nœud à l'aide des valeurs d'un indice, dans ce cas R2 pour simplifier les calculs. A chaque nœud, le indice et la division sont choisis de telle manière que les nœuds enfants résultants diffèrent autant que possible les uns des autres ou présentent, de manière plus ou moins équivalente, la plus faible divergence intra-groupe. Le processus est répété sur chaque nouveau nœud jusqu'à ce qu'un certain critère d'arrêt soit atteint, dans ce cas la valeur critique de signification du test F.
+L'objectif d'un arbre de régression est de trouver les caractéristiques les plus importants dans la variations des profils d'activités compte tenu de leurs interactions. Essentiellement, l'algorithme d'un arbre de régression commence avec tous les individus regroupés dans un nœud initial. Il partitionne récursivement chaque nœud à l'aide des valeurs d'indicateur de référence, dans ce cas R2 pour simplifier les calculs. A chaque nœud, l'indicateur de référence et la division sont choisis de telle manière que les nœuds enfants résultants diffèrent autant que possible les uns des autres ou présentent, de manière plus ou moins équivalente, la plus faible divergence intra-groupe. Le processus est répété sur chaque nouveau nœud jusqu'à ce qu'un certain critère d'arrêt soit atteint, dans ce cas la valeur critique de signification du test F.
 
-En effet, la qualité globale de l'arbre peut être évaluée par la force de l'association entre les séquences et l'appartenance des feuilles (nœuds terminal). Le pseudo-F global permet de tester la signiﬁcation statistique de la segmentation obtenue, tandis que le pseudo-R2 global fournit une mesure de la partie de la divergence total qui est expliquée par l'arbre. (@studer2011discrepancy)
+En effet, la qualité globale de l'arbre peut être évaluée par la force de l'association des groupes de séquences des feuilles de l'arbre de régression (nœuds terminaux). Le pseudo-F global permet de tester la signiﬁcation statistique de la segmentation obtenue, tandis que le pseudo-R2 global fournit une mesure de la partie de la divergence total qui est expliquée par l'arbre. (@studer2011discrepancy)
 
 
 ```{r, eval = FALSE}
@@ -566,7 +576,7 @@ adn.tree<- seqtree(adn.seq ~  KAGE + EDUC + OCC + PCSC + DISV + ZONAGE ,
 print(adn.tree, gap = 2)
 
 #Graphical tree using Graphviz
-seqtreedisplay(adn.tree, filename="indel_adn_au.png", type="d", border=NA, cex.legend = 2)
+seqtreedisplay(adn.tree, filename="indel_adn_au.png", type="d", border=NA, cex.legend = 2, gvpath = 'C:/Program Files/Graphviz')
 
 #rm(adn.tree)
 
@@ -602,20 +612,49 @@ ADN_M$groupe <- factor(partition,
 
 ```{r, eval=F, message=FALSE, collapse=T, echo = F}
 # Sauvegarder les pastition pour l'analyse descriptive des clusters
+path2save = "Test5000/"
 
-save(ADN_M, file = "DataR/Analyse/ADN_M.RDS" )
-save(adn.seq, file = "DataR/Analyse/adn.seq.RDS" )
-save(adn.tree, file = "DataR/Analyse/adn.tree.RDS" )
-save(clusterRange, file = "DataR/Analyse/clusterRange.RDS" )
-save(clusterward1, file = "DataR/Analyse/clusterward1.RDS" )
-save(da.cov, file = "DataR/Analyse/da.cov.RDS" )
-save(da.sex, file = "DataR/Analyse/da.sex.RDS" )
-save(dist.om, file = "DataR/Analyse/dist.om.RDS" )
-save(stat1, file = "DataR/Analyse/stat1.RDS" )
-save(stat2, file = "DataR/Analyse/stat2.RDS" )
-save(submat, file = "DataR/Analyse/submat.RDS" )
-save(h.cluster11, file = "DataR/Analyse/h.cluster11.RDS" )
-save(alphabetTable, file = "DataR/Analyse/alphabetTable.RDS" )
+save(ADN_M, file = paste("DataR/", path2save, "ADN_M.RDS", sep="", collapse=NULL) )
+save(adn.seq, file = paste("DataR/", path2save, "adn.seq.RDS", sep="", collapse=NULL) )
+save(adn.tree, file = paste("DataR/", path2save, "adn.tree.RDS", sep="", collapse=NULL) )
+save(clusterRange, file = paste("DataR/", path2save, "clusterRange.RDS", sep="", collapse=NULL) )
+save(clusterward1, file = paste("DataR/", path2save, "clusterward1.RDS", sep="", collapse=NULL) )
+save(da.cov, file = paste("DataR/", path2save, "da.cov.RDS", sep="", collapse=NULL) )
+save(da.sex, file = paste("DataR/", path2save, "da.sex.RDS", sep="", collapse=NULL) )
+save(dist.om, file = paste("DataR/", path2save, "dist.om.RDS", sep="", collapse=NULL) )
+save(stat1, file = paste("DataR/", path2save, "stat1.RDS", sep="", collapse=NULL) )
+save(stat2, file = paste("DataR/", path2save, "stat2.RDS", sep="", collapse=NULL) )
+save(submat, file = paste("DataR/", path2save, "submat.RDS", sep="", collapse=NULL) )
+save(h.cluster11, file = paste("DataR/", path2save, "h.cluster11.RDS", sep="", collapse=NULL) )
+save(alphabetTable, file = paste("DataR/", path2save, "alphabetTable.RDS", sep="", collapse=NULL) )
+
+# load( file = paste("DataR/", path2save, "ADN_M.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "adn.seq.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "adn.tree.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "clusterRange.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "clusterward1.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "da.cov.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "da.sex.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "dist.om.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "stat1.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "stat2.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "submat.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "h.cluster11.RDS", sep="", collapse=NULL) )
+# load( file = paste("DataR/", path2save, "alphabetTable.RDS", sep="", collapse=NULL) )
+
+# save(ADN_M, file = "DataR/Test5000/ADN_M.RDS" )
+# save(adn.seq, file = "DataR/Test5000/adn.seq.RDS" )
+# save(adn.tree, file = "DataR/Test5000/adn.tree.RDS" )
+# save(clusterRange, file = "DataR/Test5000/clusterRange.RDS" )
+# save(clusterward1, file = "DataR/Test5000/clusterward1.RDS" )
+# save(da.cov, file = "DataR/Test5000/da.cov.RDS" )
+# save(da.sex, file = "DataR/Test5000/da.sex.RDS" )
+# save(dist.om, file = "DataR/Test5000/dist.om.RDS" )
+# save(stat1, file = "DataR/Test5000/stat1.RDS" )
+# save(stat2, file = "DataR/Test5000/stat2.RDS" )
+# save(submat, file = "DataR/Test5000/submat.RDS" )
+# save(h.cluster11, file = "DataR/Test5000/h.cluster11.RDS" )
+# save(alphabetTable, file = "DataR/Test5000/alphabetTable.RDS" )
 
 ```
 

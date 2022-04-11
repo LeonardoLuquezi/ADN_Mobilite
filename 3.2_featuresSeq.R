@@ -4,7 +4,7 @@
 # Juin 2020 - LUQUEZI Leonardo
 # ================================================================================ #
 
-# 0. Librarys
+# ---------- 0. Librarys ----------
 library(stringr)
 library(dplyr)
 library(tidyr)
@@ -13,7 +13,7 @@ library(Hmisc)
 library(reshape2)
 source(file = "0_fonctionsR.R")
 
-# ---------- 1.Path management ----------
+# ---------- 1. Path management ----------
 # Path: lire les données brutes .RDR de l'Enquête
 # PathR.Menage <- "DataR/BD_brute_menage.RDS"
 PathR.Personne <- "DataR/BD_brute_personne.RDS"
@@ -88,7 +88,7 @@ perTable <- perTable %>%
                           as.numeric(DP13) >= 50000 ~ 5))
 
 # Possession du permis de conduire (PERMIS)
-# 1: Oui | 2: Non | 3: Accompagnee ou lecons
+# 1: Oui | 2: Non | 3: Accompagnee ou leçons
 perTable <- perTable %>% 
   mutate(PERMIS = P5)
 
@@ -106,7 +106,7 @@ rm(educ.encodage)
 
 
 # Création de la variable occupation principale en 5 modalités (OCC)
-# 1 : active ; 2 : étudiant ; 3 : sans emploi ; 4 : retraites ; 5 : inactifs
+# 1 : active ; 2 : etudiant ; 3 : sans emploi ; 4 : retraite ; 5 : inactif
 occ.encodage <- alphabet2TE( alphabetTable, classe.alphabet = "OCC", variable.jointby = "P7")
 
 perTable <- left_join(x = perTable , y = occ.encodage, by = "P7", keep = F )
@@ -114,7 +114,7 @@ perTable <- left_join(x = perTable , y = occ.encodage, by = "P7", keep = F )
 rm(occ.encodage)
 
 # Catégorie socioprofessionnelle : 
-# 5: Cadres | 4: Intermédiaire | 3: Employés | 2: Ouvriers | 1: Inactifs
+# 5: Cadre | 4: Intermédiaire | 3: Employé | 2: Ouvrier | 1: Inactif
 pcsc.encodage <- alphabet2TE( alphabetTable, classe.alphabet = "PCSC", variable.jointby = "P9")
 
 perTable <- left_join(x = perTable , y = pcsc.encodage, by = "P9", keep = F ) 
@@ -178,7 +178,7 @@ perTable <- perTable %>%
                          as.numeric(DISTP) == 0 ~ 0))
 
 # ---------- 4.2 Filtrer Secteurs de Tirage Clases ----------
-# Filtrer Secteurs de Tirage Aire Urbaine
+# Filtrer Secteurs de Tirage Aire Urbaine de Nantes
 perTable <-  perTable %>% 
       filter( is.na(ZONAGE) == FALSE)
 
@@ -187,5 +187,5 @@ perTable <-  perTable %>%
 # Sauvegarder features
 save(perTable, file = PathR.IND_Carac)
 
-# 6. Nettoyage Global Environement
+# ---------- 6. Nettoyage Global Environement ----------
 rm(list = ls())
